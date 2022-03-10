@@ -9,12 +9,13 @@ public class Main {
     static int[] gameField = new int[9];
     static int activePlayer=1;
     static int winner=0;
+    static int steps=0;
     public static void main(String[] args)  {
         int selectedPlace=-1;
         Scanner console = new Scanner(System.in);
         while (true) {
             printField(gameField);
-            System.out.println("select number of place by numpad layout");
+            System.out.println("select number of place by numpad layout and press enter");
             try {
                 selectedPlace = console.nextInt()-1;
             }
@@ -22,7 +23,13 @@ public class Main {
                 selectedPlace=-1;
                 console.nextLine();
             }
-            makeStep(selectedPlace);
+            if (selectedPlace>=10){
+                System.out.println("select number of place(1-9) by numpad layout and press enter");
+                continue;
+            }
+            if(!makeStep(selectedPlace)){
+                continue;
+            }
             if(checkGameOver()){
                 break;
             }
@@ -36,26 +43,46 @@ public class Main {
     }
 
     private static void printGameResults() {
-        System.out.println("winner is - "+ winner);
+        printField(gameField);
+        if (winner == 0){
+            System.out.println("no winner, tie this time");
+        }else {
+            if(winner > 10){
+                System.out.println("winner is - O");
+            }else{
+            System.out.println("winner is - X");}
+        }
     }
 
     private static boolean checkGameOver() {
-        int x;
-        int y;
-        int full;
-        for (int i = 0; i < 9; i++) {
-
+        for (int i = 0; i < 3; i++) {
+            if(gameField[0+i*3]!=0&&(gameField[0+i*3]==gameField[1+i*3])&&(gameField[1+i*3]==gameField[2+i*3])){
+                winner = gameField[0+i*3];
+                return true;
+            }
+            if (gameField[i]!=0&&(gameField[i]==gameField[i+3])&&(gameField[i+3]==gameField[i+6])){
+                winner = gameField[i];
+                return true;
+            }
+        }
+        if(gameField[5]!=0&&((gameField[1]==gameField[5]&&gameField[5]==gameField[9])||
+                (gameField[7]==gameField[5]&&gameField[5]==gameField[3]))){
+            return true;
+        }
+        if(steps==9){
+            return true;
         }
         return false;
     }
 
-    private static int makeStep( int selectedPlace) {
+    private static boolean makeStep( int selectedPlace) {
         if (gameField[selectedPlace]==0){
             gameField[selectedPlace]=activePlayer;
+            steps++;
         }else {
-            return -1;
+            return false;
         }
-        return 1;
+        return true;
     }
 
     private static void clrscr(){
