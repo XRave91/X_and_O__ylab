@@ -10,9 +10,9 @@ public class Main {
     static int activePlayer=1;
     static int winner=0;
     static int steps=0;
+    static Scanner console = new Scanner(System.in);
     public static void main(String[] args)  {
-        int selectedPlace=-1;
-        Scanner console = new Scanner(System.in);
+        int selectedPlace;
         while (true) {
             printField(gameField);
             System.out.println("select number of place by numpad layout and press enter");
@@ -40,6 +40,12 @@ public class Main {
             }
         }
         printGameResults();
+        writeResultsToFile();
+    }
+
+    private static void writeResultsToFile() {
+        System.out.println("Type name of winner for eternal memory\n");
+        console.nextLine();
     }
 
     private static void printGameResults() {
@@ -56,8 +62,8 @@ public class Main {
 
     private static boolean checkGameOver() {
         for (int i = 0; i < 3; i++) {
-            if(gameField[0+i*3]!=0&&(gameField[0+i*3]==gameField[1+i*3])&&(gameField[1+i*3]==gameField[2+i*3])){
-                winner = gameField[0+i*3];
+            if(gameField[i*3]!=0&&(gameField[i*3]==gameField[1+i*3])&&(gameField[1+i*3]==gameField[2+i*3])){
+                winner = gameField[i*3];
                 return true;
             }
             if (gameField[i]!=0&&(gameField[i]==gameField[i+3])&&(gameField[i+3]==gameField[i+6])){
@@ -65,14 +71,12 @@ public class Main {
                 return true;
             }
         }
-        if(gameField[5]!=0&&((gameField[1]==gameField[5]&&gameField[5]==gameField[9])||
-                (gameField[7]==gameField[5]&&gameField[5]==gameField[3]))){
+        if(gameField[4]!=0&&((gameField[0]==gameField[4]&&gameField[4]==gameField[8])||
+                (gameField[6]==gameField[4]&&gameField[4]==gameField[2]))){
+            winner = gameField[4];
             return true;
         }
-        if(steps==9){
-            return true;
-        }
-        return false;
+        return steps == 9;
     }
 
     private static boolean makeStep( int selectedPlace) {
@@ -89,23 +93,23 @@ public class Main {
         System.out.print("\033[H\033[2J");//clear console
     }
     public static void printField(int[] field){
-        String line = "";
+        StringBuilder line = new StringBuilder();
         clrscr();
         for (int i = 8; i >= 0; i--) {
             if((i+1)%3==0 && i!=8){
                 System.out.println("|"+line);
-                line="";
+                line = new StringBuilder();
                 //line=line+"|\n";
             }
-            line="|"+line;
+            line.insert(0, "|");
             if (field[i]==0){
-                line=" "+line;
+                line.insert(0, " ");
             }
             if (field[i]==1){
-                line="X"+line;
+                line.insert(0, "X");
             }
             if (field[i]==100){
-                line="O"+line;
+                line.insert(0, "O");
             }
 
             // System.out.println("|"+field[3*i]+"|"+field[3*i+1]+"|"+field[3*i+1]+"|");
