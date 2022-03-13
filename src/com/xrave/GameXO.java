@@ -1,9 +1,5 @@
 package com.xrave;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
-
 
 public class GameXO {
     DataProcessor gameData;
@@ -49,13 +45,13 @@ public class GameXO {
             gameData.winner = gameData.gameField[4];
             return true;
         }
-        return gameData.steps == 9;
+        return gameData.step == 9;
     }
 
     private  boolean makeStep( int selectedPlace) {
-        if (gameData.gameField[selectedPlace]==0){
+        if (gameData.gameField[selectedPlace]==0&&selectedPlace<9){
             gameData.gameField[selectedPlace]=gameData.activePlayer;
-            gameData.steps++;
+            gameData.step++;
         }else {
             return false;
         }
